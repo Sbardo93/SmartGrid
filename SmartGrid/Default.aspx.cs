@@ -39,7 +39,8 @@ namespace SmartGridWebSite
                 });
             }
 
-            this.ucSmartGrid.LoadSmartGrid<Oggetto>(getData(), true, true);
+            this.ucSmartGrid.LoadSmartGrid<Oggetto>(getData(), true, true, new List<ucSmartGrid.ButtonTypeEnum>() { ucSmartGrid.ButtonTypeEnum.Excel, ucSmartGrid.ButtonTypeEnum.Pdf, ucSmartGrid.ButtonTypeEnum.Print },
+                "Anagrafica");
         }
         [System.Web.Services.WebMethod(EnableSession = true)]
         public static ucSmartGrid.SmartGridData GetObjects()

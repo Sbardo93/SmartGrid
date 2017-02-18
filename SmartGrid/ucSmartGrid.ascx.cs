@@ -37,7 +37,19 @@ namespace SmartGrid
         /// ClientId della smartGrid
         /// </summary>
         public string TableName = "tblSmartGrid";
-        public string ExportName = "Export Default";
+        public string FileName;
+        public string sDom = "<'row'<'col-sm-1'{0}><'col-sm-3'{1}><'col-sm-4 dataTables_selectedRows'><'col-sm-3'{2}><'col-sm-1 dataTables_clearFilters'>> <'row'<'col-sm-12'rt>> <'row'<'col-sm-3'i><'col-sm-5 dataTables_toggleCheckboxes'><'col-sm-4'p>>";
+
+        /// <summary>
+        /// Enum delle tipologie di bottoni
+        /// </summary>
+        public enum ButtonTypeEnum
+        {
+            ColumnVisibility,
+            Excel,
+            Pdf,
+            Print,
+        }
         /// <summary>
         /// DataField che viene utilizzato come chiave nell'Event Handler
         /// </summary>
@@ -249,9 +261,10 @@ namespace SmartGrid
         /// <param name="objects">DataSource della SmartGrid</param>
         /// <param name="lengthMenu">Permette la selezione del numero di righe della SmartGrid</param>
         /// <param name="horizontalSearch">Abilita la ricerca orizzontale</param>
-        public void LoadSmartGrid<T>(List<T> objects, bool lengthMenu = true, bool horizontalSearch = false)
+        public void LoadSmartGrid<T>(List<T> objects, bool lengthMenu = true, bool horizontalSearch = false, List<ButtonTypeEnum> btns = null, string fileName = "Data")
         {
-            SetDataSource<T>(objects, lengthMenu, horizontalSearch);
+            FileName = fileName + "_" + DateTime.Now.ToString("yyyyMMdd");
+            SetDataSource<T>(objects, lengthMenu, horizontalSearch, btns);
         }
         /// <summary>
         /// Inizializzazione dell'Event Handler
@@ -272,7 +285,7 @@ namespace SmartGrid
         /// <param name="objects">DataSource della SmartGrid</param>
         /// <param name="lengthMenu">Permette la selezione del numero di righe della SmartGrid</param>
         /// <param name="horizontalSearch">Abilita la ricerca orizzontale</param>
-        private void SetDataSource<T>(List<T> objects, bool lengthMenu, bool horizontalSearch)
+        private void SetDataSource<T>(List<T> objects, bool lengthMenu, bool horizontalSearch, List<ButtonTypeEnum> btns)
         {
             try
             {
@@ -335,6 +348,15 @@ namespace SmartGrid
                 SmartGridData smartGridData = new SmartGridData();
                 var jsonSerialiser = new JavaScriptSerializer();
 
+                bool btnFeatures = false;
+                if (btns != null && btns.Count > 0)
+                {
+                    List<string> renderedButtons = new List<string>();
+                    btns.ForEach(x => { renderedButtons.Add(x.ToString()); });
+                    btnFeatures = true;
+                    smartGridData.Buttons = jsonSerialiser.Serialize(renderedButtons);
+                }
+                smartGridData.sDom = string.Format(sDom, lengthMenu ? "l" : "", btnFeatures ? "B" : "", horizontalSearch ? "f" : "");
                 smartGridData.Objects = jsonSerialiser.Serialize(Objects);
                 smartGridData.Columns = jsonSerialiser.Serialize(Columns);
                 smartGridData.ColumnsDefs = jsonSerialiser.Serialize(ColumnsDefs);
@@ -451,6 +473,14 @@ namespace SmartGrid
         [Serializable]
         public class SmartGridData
         {
+            /// <summary>
+            /// sDom della SmartGrid
+            /// </summary>
+            public string sDom { get; set; }
+            /// <summary>
+            /// Buttons della SmartGrid
+            /// </summary>
+            public string Buttons { get; set; }
             /// <summary>
             /// Json contenente la lista degli oggetti da visualizzare nella SmartGrid
             /// </summary>

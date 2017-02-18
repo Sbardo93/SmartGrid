@@ -157,63 +157,71 @@
                 break;
         }
     }
-
+    function RenderButtons(value)
+    {
+        enabledButtons.push(window[value]);
+    }
     var tableName = "#<%=TableName%>";
-    var exportName = "<%=ExportName%>";
+    var fileName = "<%=FileName%>";
+    var ColumnVisibility = {
+        extend: 'collection',
+        text: '<i class="fa fa-eye-slash" id="colVisBtn"></i> nascondi',
+        buttons: ['columnsVisibility'],
+        visibility: false
+    };
+    var Excel = {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o"></i> excel',
+        title: fileName,
+        exportOptions: {
+            columns: ':visible:not(.noPrint)'
+        },
+        customize: function (xlsx) {
+            var sheet = xlsx.xl.worksheets['Sheet1.xml'];
+            $('row c[r^="C"]', sheet).attr('s', '2');
+        }
+    };
+    var Pdf = {
+        extend: 'pdf',
+        text: '<i class="fa fa-file-pdf-o"></i> PDF',
+        title: fileName,
+        exportOptions: {
+            columns: ':visible:not(.noPrint)'
+        }
+    };
+    var Print = {
+        extend: 'print',
+        text: '<i class="fa fa-print"></i> Stampa',
+        title: fileName,
+        exportOptions: {
+            columns: ':visible:not(.noPrint)'
+        }
+    };
+    var enabledButtons =[];
 
-    function ShowSmartGrid(Objects, Columns, ColumnsDefs) {
+    function ShowSmartGrid(Buttons, customDom, Objects, Columns, ColumnsDefs) {
 
         Columns.forEach(RenderColumns);
         ColumnsDefs.forEach(RenderColumnsDefs);
+        if (Buttons == undefined) {
+            enabledButtons = [];
+        } else {
+            Buttons.forEach(RenderButtons);
+        }
 
         var table = $(tableName).DataTable({
             aaData: Objects,
             stateSave: false,
             bAutoWidth: false,
             fixedHeader: true,
-            sDom: "<'row'<'col-sm-1'l><'col-sm-3'B><'col-sm-4 dataTables_selectedRows'><'col-sm-3'f><'col-sm-1 dataTables_clearFilters'>> <'row'<'col-sm-12'rt>> <'row'<'col-sm-3'i><'col-sm-5 dataTables_toggleCheckboxes'><'col-sm-4'p>>",
+            sDom: customDom,
             "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tutte"]],
             order: [0, "asc"],
             "aoColumns": Columns,
             "aoColumnDefs": ColumnsDefs,
             pagingType: "full_numbers",
             buttons: {
-                buttons: [
-                    {
-                        extend: 'collection',
-                        text: '<i class="fa fa-eye-slash" id="colVisBtn"></i> nascondi',
-                        buttons: ['columnsVisibility'],
-                        visibility: false
-                    },
-                    {
-                        extend: 'excel',
-                        text: '<i class="fa fa-file-excel-o"></i> excel',
-                        title: exportName,
-                        exportOptions: {
-                            columns: ':visible:not(.noPrint)'
-                        },
-                        customize: function (xlsx) {
-                            var sheet = xlsx.xl.worksheets['Sheet1.xml'];
-                            $('row c[r^="C"]', sheet).attr('s', '2');
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        text: '<i class="fa fa-file-pdf-o"></i> PDF',
-                        title: exportName,
-                        exportOptions: {
-                            columns: ':visible:not(.noPrint)'
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: '<i class="fa fa-print"></i> Stampa',
-                        title: exportName,
-                        exportOptions: {
-                            columns: ':visible:not(.noPrint)'
-                        }
-                    }
-                ],
+                buttons: enabledButtons,
                 dom: {
                     container: {
                         className: 'dt-buttons'
@@ -325,7 +333,7 @@
                 if (data.d == null) {
                     return;
                 }
-                ShowSmartGrid(JSON.parse(data.d.Objects), JSON.parse(data.d.Columns), JSON.parse(data.d.ColumnsDefs));
+                ShowSmartGrid(JSON.parse(data.d.Buttons), data.d.sDom, JSON.parse(data.d.Objects), JSON.parse(data.d.Columns), JSON.parse(data.d.ColumnsDefs));
                 //hideBlockUI();
             },
             error: function (data) {
