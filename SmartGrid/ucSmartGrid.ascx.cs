@@ -38,7 +38,7 @@ namespace SmartGrid
         /// </summary>
         public string TableName = "tblSmartGrid";
         public string FileName;
-        public string sDom = "<'row'<'col-sm-1'{0}><'col-sm-3'{1}><'col-sm-4 dataTables_selectedRows'><'col-sm-3'{2}><'col-sm-1 dataTables_clearFilters'>> <'row'<'col-sm-12'rt>> <'row'<'col-sm-3'i><'col-sm-5 dataTables_toggleCheckboxes'><'col-sm-4'p>>";
+        public string sDom = "<'row container-fluid'<'col-sm-1'{0}><'col-sm-3'{1}><'col-sm-4 dataTables_selectedRows'><'col-sm-3'{2}><'col-sm-1 dataTables_clearFilters'>> <'row'<'col-sm-12'rt>> <'row'<'col-sm-5'i><'col-sm-1 dataTables_toggleCheckboxes'><'col-sm-6'p>>";
 
         /// <summary>
         /// Enum delle tipologie di bottoni

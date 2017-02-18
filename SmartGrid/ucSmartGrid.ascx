@@ -105,21 +105,21 @@
             case detailClass:
                 value.mRender = mRenderFaDetail;
                 value.fnCreatedCell = fnCreatedCustom;
-                value.className = "noPrint";
+                value.className += " noPrint";
                 break;
             case editClass:
                 value.mRender = mRenderFaEdit;
                 value.fnCreatedCell = fnCreatedCustom;
-                value.className = "noPrint";
+                value.className += " noPrint";
                 break;
             case deleteClass:
                 value.mRender = mRenderFaDelete;
                 value.fnCreatedCell = fnCreatedCustom;
-                value.className = "noPrint";
+                value.className += " noPrint";
                 break;
             case multipleActionClass:
                 value.fnCreatedCell = fnCreatedCustom;
-                value.className = "noPrint";
+                value.className += " noPrint";
                 break;
         }
         if (currToolTipField) {
@@ -223,7 +223,7 @@
                 buttons: enabledButtons,
                 dom: {
                     container: {
-                        className: 'dt-buttons'
+                        className: 'dt-buttons text-left'
                     },
                     button: {
                         className: 'btn btn-default'
@@ -233,13 +233,13 @@
             language: {
                 "emptyTable": "Non sono presenti righe.",
                 "info": "Righe da _START_ a _END_ di _TOTAL_",
-                "infoEmpty": "Pagina 0 di 0 di 0 righe totali",
+                "infoEmpty": "0 righe",
                 "infoFiltered": "(_MAX_ totali)",
                 "lengthMenu": "Mostra _MENU_",
                 "iDisplayLength": 10,
                 "search": "Filtra:",
                 "bDestroy": true,
-                "zeroRecords": "Non sono presenti record",
+                "zeroRecords": "Non sono presenti righe",
                 "paginate": {
                     "first": "Prima",
                     "last": "Ultima",
@@ -527,6 +527,6 @@
     }
 </script>
 
-<div class="table-responsive" id="divSmartGrid" runat="server">
+<div class="table-responsive container-fluid" id="divSmartGrid" runat="server">
 </div>
 <asp:Button ID="btnRowSelected" runat="server" Visible="false" />
