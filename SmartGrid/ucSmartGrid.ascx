@@ -200,7 +200,6 @@
     var enabledButtons =[];
 
     function ShowSmartGrid(Buttons, customDom, Objects, Columns, ColumnsDefs) {
-
         Columns.forEach(RenderColumns);
         ColumnsDefs.forEach(RenderColumnsDefs);
         if (Buttons == undefined) {
